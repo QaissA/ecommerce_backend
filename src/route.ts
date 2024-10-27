@@ -1,21 +1,24 @@
 import express from "express";
-import { registerUser, removeUser, ModifyUser, getUser, getUsers } from "./controller/userController";
+import {
+  registerUser,
+  removeUser,
+  ModifyUser,
+  getUser,
+  getUsers,
+} from "./controller/userController";
+import { authencateJWT } from "./middleware/authMidleware";
 
 const router = express.Router();
-console.log("Route loaded")
+console.log("Route loaded");
 
 router.post("/users", registerUser);
 
 router.get("/users", getUsers);
 
-router.get("/users/:id", getUser)
+router.get("/users/:id", getUser);
 
-router.put("/users/:id", ModifyUser)
+router.put("/users/:id", ModifyUser);
 
-router.delete("/users/:id", removeUser)
-
-
-
-
+router.delete("/users/:id", removeUser);
 
 export default router;
