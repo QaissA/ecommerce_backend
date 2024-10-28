@@ -2,7 +2,9 @@ import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    log : ["query", "info", "warn", "error"]
+});
 const saltRounds = 10;
 const JWT_SECRET =
   process.env.JWT_SECRET || "E6o4yKSEd7mRyEOalAdJqgmLCTeVwWz1idxdxd0liy4=";
@@ -20,7 +22,7 @@ export const createUser = async (data: {
     data: {
       name: data.name,
       email: data.email,
-      password: data.password,
+      password: hashedPassword,
       role: data.role || "CUSTOMER",
       adress: data.adress,
     },
@@ -35,9 +37,11 @@ export const loginUser = async (email: string, password: string) => {
   if (!user) {
     throw new Error("User not found!");
   }
-
+  console.log(password, user.password)
   const isMatch = await bcrypt.compare(password, user.password);
+  console.log(isMatch)
   if (!isMatch) {
+    console.log("here")
     throw new Error("Invalid password");
   }
 
@@ -46,7 +50,7 @@ export const loginUser = async (email: string, password: string) => {
     JWT_SECRET,
     { expiresIn: "24h" }
   );
-
+  console.log(token, user)
   return { user, token };
 };
 

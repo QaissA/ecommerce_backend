@@ -9,7 +9,13 @@ export const authencateJWT = (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "No token provided or invalid format" });
+  }
+
+  const token = authHeader.split(" ")[1];
 
   if (!token) {
     return res.sendStatus(403);
@@ -17,9 +23,9 @@ export const authencateJWT = (
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
-      return res.sendStatus(403);
+      return res.status(403).json({message : "Invalid or expired token"})
     }
-    req.body = user;
+    req.user = user;
     next();
   });
 };
