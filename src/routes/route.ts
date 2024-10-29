@@ -5,23 +5,23 @@ import {
   ModifyUser,
   getUser,
   getUsers,
-} from "./controller/userController";
+} from "../controller/userController";
 import {
   addProduct,
   getProducts,
   getOneProduct,
   modifyPoduct,
   removeProduct,
-} from "./controller/productController";
+} from "../controller/productController";
 import {
   addCategory,
   getCategories,
   getOneCategory,
   modifyCategory,
   removeCategory,
-} from "./controller/categoryController";
-import { authencateJWT } from "./middleware/authMidleware";
-import { login, signin } from "./controller/authController";
+} from "../controller/categoryController";
+import { authencateJWT } from "../middleware/authMidleware";
+import { login, signin } from "../controller/authController";
 
 const router = express.Router();
 
