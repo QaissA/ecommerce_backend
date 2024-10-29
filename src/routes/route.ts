@@ -1,53 +1,28 @@
 import express from "express";
-import {
-  registerUser,
-  removeUser,
-  ModifyUser,
-  getUser,
-  getUsers,
-} from "../controller/userController";
-import {
-  addProduct,
-  getProducts,
-  getOneProduct,
-  modifyPoduct,
-  removeProduct,
-} from "../controller/productController";
-import {
-  addCategory,
-  getCategories,
-  getOneCategory,
-  modifyCategory,
-  removeCategory,
-} from "../controller/categoryController";
-import { authencateJWT } from "../middleware/authMidleware";
-import { login, signin } from "../controller/authController";
+
+import userRouter from "./userRoutes";
+import productRouter from "./productRoutes";
+import categoryRouter from "./categoryRoutes";
+import orderRouter from "./orderRoutes";
+import orderItemRouter from "./orderItemRoutes";
+import paymentRouter from "./paymentRoutes";
+import reviewRouter from "./reviewRoutes";
+import cartRouter from "./cartRoutes";
+import cartItemRouter from "./cartItemRoutes";
+import authRouter from "./authRoutes";
 
 const router = express.Router();
 
-//ROUTES FOR USERS CONTROLLER
-router.post("/users", registerUser);
-router.get("/users", authencateJWT, getUsers);
-router.get("/users/:id", getUser);
-router.put("/users/:id", ModifyUser);
-router.delete("/users/:id", removeUser);
-
-//ROUTES FOR PRODUCT CONTROLLER
-router.post("/products", addProduct);
-router.get("/products", getProducts);
-router.get("/products/:id", getOneProduct);
-router.put("/products/:id", modifyPoduct);
-router.delete("/products/:id", removeProduct);
-
-//ROUTES FOR CATEGORY CONTROLLER
-router.post("/categories", addCategory);
-router.get("/categories", getCategories);
-router.get("/categories/:id", getOneCategory);
-router.put("/categories/:id", modifyCategory);
-router.delete("/categories/:id", removeCategory);
-
-//routes from auth
-router.post("/signin", signin);
-router.post("/login", login);
+router.use("/users", userRouter);
+router.use("/products", productRouter);
+router.use("/category", categoryRouter);
+router.use("/orders", orderRouter);
+router.use("/order-items", orderItemRouter);
+router.use("/payment", paymentRouter);
+router.use("/review", reviewRouter);
+router.use("/cart", cartRouter);
+router.use("/cart", cartRouter);
+router.use("/cart-items", cartItemRouter);
+router.use("/auth", authRouter);
 
 export default router;
