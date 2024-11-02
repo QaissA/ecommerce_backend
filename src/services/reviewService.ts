@@ -23,6 +23,16 @@ export const getReviewById = async (id: number) => {
   });
 };
 
+//get a review by userId
+export const gerReviewByUser = async (userId : number) => {
+  return await prisma.review.findMany({
+    where : { userId },
+    include : {
+      product : true
+    }
+  })
+}
+
 // Create a new review
 export const createReview = async (data: {
   userId: number;
