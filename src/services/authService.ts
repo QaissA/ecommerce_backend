@@ -1,6 +1,8 @@
 import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import nodemailer from 'nodemailer';
 
 const prisma = new PrismaClient({
     log : ["query", "info", "warn", "error"]
@@ -18,15 +20,22 @@ export const createUser = async (data: {
 }) => {
   const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 
-  return await prisma.user.create({
+  const verificationCode = crypto.randomBytes(3).toString("hex").toUpperCase();
+
+  const newUser =  await prisma.user.create({
     data: {
       name: data.name,
       email: data.email,
       password: hashedPassword,
       role: data.role || "CUSTOMER",
       adress: data.adress,
+      verificationCode,
+      isVerified : false,
     },
   });
+
+  await sendVerificationEmail(data.email, verificationCode)
+  return newUser;
 };
 
 export const loginUser = async (email: string, password: string) => {
@@ -61,3 +70,22 @@ export const verifyToken = (token: string) => {
     throw new Error("Invalid token");
   }
 };
+
+const sendVerificationEmail = async (email : string, code :string) => {
+  const transporter = nodemailer.createTransport({
+    service : "Gmail",
+    auth : {
+      user : "qaissabdelhamid@gmail.com",
+      pass : ""
+    }
+  })
+
+  const mailOptions = {
+    from : "qaissabdelhamid@gmail.com",
+    to : email,
+    subject : "Verify Your Email",
+    text : `Your verification code is : ${code}`
+  }
+
+  await transporter.sendMail(mailOptions);
+}

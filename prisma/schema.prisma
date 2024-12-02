@@ -25,6 +25,8 @@ model User {
   password String  @unique @db.VarChar(255)
   role     Role    @default(CUSTOMER)
   adress   String? @db.VarChar(255)
+  verificationCode String? @db.VarChar(255)
+  isVerified Boolean @default(false)
 
   orders  Order[]
   reviews Review[]
